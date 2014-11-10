@@ -26,11 +26,15 @@ or alternatively using the factory pattern:
 
 from __future__ import absolute_import
 
+import gzip
 import sys
 
 from collections import Mapping
-from flask import current_app, request, Blueprint, render_template, url_for
+from flask import current_app, request, Blueprint, render_template, url_for, \
+    Response
+from flask.signals import Namespace
 from functools import wraps
+from itertools import islice
 from werkzeug.utils import import_string
 
 
@@ -38,10 +42,25 @@ from . import config
 from .version import __version__
 
 # PY2/3 compatibility
-if sys.version_info[0] == 3:
+if sys.version_info[0] == 3:  # pragma: no cover
+    import io
+    BytesIO = io.BytesIO
     string_types = str,
+    from itertools import zip_longest
+    b = lambda s: s.encode("latin-1")
 else:
+    from cStringIO import StringIO as BytesIO
     string_types = basestring,
+    from itertools import izip_longest as zip_longest
+    b = lambda s: s
+
+
+# Signals
+_signals = Namespace()
+
+#: Sent when a sitemap index is generated and given page will need to be
+#: generated in the future from already calculated url set.
+sitemap_page_needed = _signals.signal('sitemap-page-needed')
 
 
 class Sitemap(object):
@@ -88,6 +107,11 @@ class Sitemap(object):
                 'sitemap',
                 self._decorate(self.sitemap)
             )
+            self.blueprint.add_url_rule(
+                app.config.get('SITEMAP_ENDPOINT_PAGE_URL'),
+                'page',
+                self._decorate(self.page)
+            )
             app.register_blueprint(
                 self.blueprint,
                 url_prefix=app.config.get('SITEMAP_BLUEPRINT_URL_PREFIX')
@@ -105,8 +129,34 @@ class Sitemap(object):
 
     def sitemap(self):
         """Generate sitemap.xml."""
-        return render_template('flask_sitemap/sitemap.xml',
-                               urlset=self._generate_all_urls())
+        size = self.app.config['SITEMAP_MAX_URL_COUNT']
+        args = [iter(self._generate_all_urls())] * size
+        run = zip_longest(*args)
+        urlset = next(run)
+
+        if urlset[-1] is None:
+            return render_template('flask_sitemap/sitemap.xml',
+                                   urlset=filter(None, urlset))
+
+        def pages():
+            yield {'loc': url_for('flask_sitemap.page', page=1)}
+            sitemap_page_needed.send(current_app._get_current_object(),
+                                     page=1, urlset=urlset)
+            for page, urlset_ in enumerate(run):
+                yield {'loc': url_for('flask_sitemap.page', page=page+2)}
+                sitemap_page_needed.send(current_app._get_current_object(),
+                                         page=page+2, urlset=urlset_)
+
+        return render_template('flask_sitemap/sitemapindex.xml',
+                               sitemaps=pages())
+
+    def page(self, page):
+        """Generate sitemap for given range of urls."""
+        size = self.app.config['SITEMAP_MAX_URL_COUNT']
+        urlset = islice(self._generate_all_urls(), (page-1)*size, page*size)
+        return self.gzip_response(
+            render_template('flask_sitemap/sitemap.xml', urlset=urlset)
+        )
 
     def register_generator(self, generator):
         """Register an URL generator.
@@ -165,6 +215,20 @@ class Sitemap(object):
                         values.update(kwargs)
                         result['loc'] = url_for(endpoint, **values)
                     yield result
+
+    def gzip_response(self, data):
+        """GZip response data and create new Response instance."""
+        gzip_buffer = BytesIO()
+        gzip_file = gzip.GzipFile(mode='wb', compresslevel=6,
+                                  fileobj=gzip_buffer)
+        gzip_file.write(b(data))
+        gzip_file.close()
+        response = Response()
+        response.data = gzip_buffer.getvalue()
+        response.headers['Content-Encoding'] = 'gzip'
+        response.headers['Content-Length'] = len(response.data)
+
+        return response
 
 
 __all__ = ('Sitemap', '__version__')

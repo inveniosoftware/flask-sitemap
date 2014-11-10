@@ -187,3 +187,35 @@ class TestSitemap(FlaskTestCase):
 
         with self.app.test_client() as c:
             assert b('third') == c.get('/sitemap.xml').data
+
+    def test_pagination(self):
+        self.app.config['SERVER_NAME'] = 'www.example.com'
+        self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
+        self.app.config['SITEMAP_MAX_URL_COUNT'] = 10
+        sitemap = Sitemap(app=self.app)
+        now = datetime.now().isoformat()
+
+        @self.app.route('/')
+        def index():
+            pass
+
+        @self.app.route('/first')
+        def first():
+            pass
+
+        @self.app.route('/second')
+        def second():
+            pass
+
+        @self.app.route('/<username>')
+        def user(username):
+            pass
+
+        @sitemap.register_generator
+        def user():
+            for number in range(20):
+                yield 'user', {'username': 'test{0}'.format(number)}
+
+        with self.app.test_client() as c:
+            assert b('sitemapindex') in c.get('/sitemap.xml').data
+            assert len(c.get('/sitemap1.xml.gz').data) > 0

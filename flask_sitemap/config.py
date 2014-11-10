@@ -30,7 +30,19 @@ Default: ``/``.
 SITEMAP_ENDPOINT_URL
 --------------------
 
-Default: ``/sitemap.xml``.
+Return sitemap index or sitemap for pages with less than
+``SITEMAP_MAX_URL_COUNT`` urls.
+
+Default: ``sitemap.xml``.
+
+SITEMAP_ENDPOINT_PAGE_URL
+-------------------------
+
+Return GZipped sitemap for given page range of urls.
+
+.. note:: It is strongly recommended to provide caching decorator.
+
+Default: ``sitemap<int:page>.xml.gz``
 
 SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS
 ------------------------------------
@@ -46,6 +58,15 @@ SITEMAP_VIEW_DECORAROS
 ----------------------
 
 Default: ``[]``.
+
+SITEMAP_MAX_URL_COUNT
+---------------------
+
+The maximum number of urls per one sitemap file can be up to 50000, however
+there is 10MB limitation for the file.
+
+Default: ``10000``.
+
 """
 
 SITEMAP_BLUEPRINT = 'flask_sitemap'
@@ -54,6 +75,8 @@ SITEMAP_BLUEPRINT_URL_PREFIX = '/'
 
 SITEMAP_ENDPOINT_URL = 'sitemap.xml'
 
+SITEMAP_ENDPOINT_PAGE_URL = 'sitemap<int:page>.xml.gz'
+
 SITEMAP_URL_SCHEME = 'http'
 
 SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS = False
@@ -61,3 +84,5 @@ SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS = False
 SITEMAP_IGNORE_ENDPOINTS = None
 
 SITEMAP_VIEW_DECORATORS = []
+
+SITEMAP_MAX_URL_COUNT = 10000
