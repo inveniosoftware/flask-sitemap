@@ -37,6 +37,10 @@ SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS
 
 Default: ``False``.
 
+SITEMAP_IGNORE_ENDPOINTS
+------------------------
+
+Default: ``None``.
 """
 
 SITEMAP_BLUEPRINT = 'flask_sitemap'
@@ -48,3 +52,5 @@ SITEMAP_ENDPOINT_URL = '/sitemap.xml'
 SITEMAP_URL_SCHEME = 'http'
 
 SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS = False
+
+SITEMAP_IGNORE_ENDPOINTS = None

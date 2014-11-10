@@ -105,12 +105,11 @@ class Sitemap(object):
         if self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS']:
             for rule in self.app.url_map.iter_rules():
                 if 'GET' in rule.methods and len(rule.arguments) == 0:
-                    print rule
-                    print dir(rule)
                     yield rule.endpoint, {}
 
     def _generate_all_urls(self):
         """Run all generators and yield (url, enpoint) tuples."""
+        ignore = set(self.app.config['SITEMAP_IGNORE_ENDPOINTS'] or [])
         kwargs = dict(
             _external=True,
             _scheme=self.app.config.get('SITEMAP_URL_SCHEME')
@@ -138,6 +137,10 @@ class Sitemap(object):
                                     break
                                 result[key] = left[0]
                                 left = left[1:]
+
+                        # Check if the endpoint should be skipped
+                        if endpoint in ignore:
+                            continue
 
                         values.update(kwargs)
                         result['loc'] = url_for(endpoint, **values)

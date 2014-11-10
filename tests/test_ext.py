@@ -120,3 +120,38 @@ class TestSitemap(FlaskTestCase):
         assert 'http://www.example.com/second' in results
         assert 'http://www.example.com/third' in results
         assert 'http://www.example.com/fourth' in results
+
+    def test_ignore_endpoints(self):
+        self.app.config['SERVER_NAME'] = 'www.example.com'
+        self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
+        self.app.config['SITEMAP_IGNORE_ENDPOINTS'] = ['first', 'user']
+        sitemap = Sitemap(app=self.app)
+        now = datetime.now().isoformat()
+
+        @self.app.route('/')
+        def index():
+            pass
+
+        @self.app.route('/first')
+        def first():
+            pass
+
+        @self.app.route('/second')
+        def second():
+            pass
+
+        @self.app.route('/<username>')
+        def user(username):
+            pass
+
+        @sitemap.register_generator
+        def user():
+            yield 'user', {'username': 'third'}
+            yield 'user', {'username': 'fourth'}, now
+
+        results = [result['loc'] for result in sitemap._generate_all_urls()]
+        assert 'http://www.example.com/' in results
+        assert 'http://www.example.com/first' not in results
+        assert 'http://www.example.com/second' in results
+        assert 'http://www.example.com/third' not in results
+        assert 'http://www.example.com/fourth' not in results
