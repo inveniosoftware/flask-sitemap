@@ -30,6 +30,9 @@ import sys
 
 from collections import Mapping
 from flask import current_app, request, Blueprint, render_template, url_for
+from functools import wraps
+from werkzeug.utils import import_string
+
 
 from . import config
 from .version import __version__
@@ -47,6 +50,7 @@ class Sitemap(object):
 
     def __init__(self, app=None):
         """Initialize login callback."""
+        self.decorators = []
         self.url_generators = [self._routes_without_params]
 
         if app is not None:
@@ -67,6 +71,12 @@ class Sitemap(object):
             if k.startswith('SITEMAP_'):
                 self.app.config.setdefault(k, getattr(config, k))
 
+        # Set decorators from configuration
+        for decorator in app.config.get('SITEMAP_VIEW_DECORATORS'):
+            if isinstance(decorator, string_types):
+                decorator = import_string(decorator)
+            self.decorators.append(decorator)
+
         # Create and register Blueprint
         if app.config.get('SITEMAP_BLUEPRINT'):
             # Add custom `template_folder`
@@ -76,12 +86,22 @@ class Sitemap(object):
             self.blueprint.add_url_rule(
                 app.config.get('SITEMAP_ENDPOINT_URL'),
                 'sitemap',
-                self.sitemap
+                self._decorate(self.sitemap)
             )
             app.register_blueprint(
                 self.blueprint,
                 url_prefix=app.config.get('SITEMAP_BLUEPRINT_URL_PREFIX')
             )
+
+    def _decorate(self, view):
+        """Decorate view with given decorators."""
+        @wraps(view)
+        def wrapper(*args, **kwargs):
+            new_view = view
+            for decorator in self.decorators:
+                new_view = decorator(new_view)
+            return new_view(*args, **kwargs)
+        return wrapper
 
     def sitemap(self):
         """Generate sitemap.xml."""

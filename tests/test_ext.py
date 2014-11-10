@@ -10,13 +10,20 @@
 from __future__ import absolute_import
 
 import os
+import sys
 
 from contextlib import contextmanager
 from datetime import datetime
-from flask import request_started, request
+from flask import request_started, request, url_for
 from flask_sitemap import Sitemap, config as default_config
 
 from .helpers import FlaskTestCase
+
+# PY2/3 compatibility
+if sys.version_info[0] == 3:
+    b = lambda s: s.encode("latin-1")
+else:
+    b = lambda s: s
 
 
 class TestSitemap(FlaskTestCase):
@@ -155,3 +162,28 @@ class TestSitemap(FlaskTestCase):
         assert 'http://www.example.com/second' in results
         assert 'http://www.example.com/third' not in results
         assert 'http://www.example.com/fourth' not in results
+
+    def test_decorators_order(self):
+        def first(dummy):
+            return lambda *args, **kwargs: 'first'
+
+        def second(dummy):
+            return lambda *args, **kwargs: 'second'
+
+        def third(dummy):
+            return lambda *args, **kwargs: 'third'
+
+        self.app.config['SITEMAP_VIEW_DECORATORS'] = [
+            first, second, 'tests.helpers.dummy_decorator']
+        sitemap = Sitemap(app=self.app)
+
+        assert first in sitemap.decorators
+        assert second in sitemap.decorators
+
+        with self.app.test_client() as c:
+            assert b('dummy') == c.get('/sitemap.xml').data
+
+        sitemap.decorators.append(third)
+
+        with self.app.test_client() as c:
+            assert b('third') == c.get('/sitemap.xml').data

@@ -22,3 +22,7 @@ class FlaskTestCase(TestCase):
         app.config['TESTING'] = True
         app.logger.disabled = True
         self.app = app
+
+
+def dummy_decorator(dummy):
+    return lambda *args, **kwargs: 'dummy'

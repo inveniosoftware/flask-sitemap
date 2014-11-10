@@ -41,16 +41,23 @@ SITEMAP_IGNORE_ENDPOINTS
 ------------------------
 
 Default: ``None``.
+
+SITEMAP_VIEW_DECORAROS
+----------------------
+
+Default: ``[]``.
 """
 
 SITEMAP_BLUEPRINT = 'flask_sitemap'
 
 SITEMAP_BLUEPRINT_URL_PREFIX = '/'
 
-SITEMAP_ENDPOINT_URL = '/sitemap.xml'
+SITEMAP_ENDPOINT_URL = 'sitemap.xml'
 
 SITEMAP_URL_SCHEME = 'http'
 
 SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS = False
 
 SITEMAP_IGNORE_ENDPOINTS = None
+
+SITEMAP_VIEW_DECORATORS = []
