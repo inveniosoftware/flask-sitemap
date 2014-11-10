@@ -47,7 +47,7 @@ class Sitemap(object):
 
     def __init__(self, app=None):
         """Initialize login callback."""
-        self.url_generators = []
+        self.url_generators = [self._routes_without_params]
 
         if app is not None:
             self.init_app(app)
@@ -100,6 +100,14 @@ class Sitemap(object):
         self.url_generators.append(generator)
         # Allow use as a decorator
         return generator
+
+    def _routes_without_params(self):
+        if self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS']:
+            for rule in self.app.url_map.iter_rules():
+                if 'GET' in rule.methods and len(rule.arguments) == 0:
+                    print rule
+                    print dir(rule)
+                    yield rule.endpoint, {}
 
     def _generate_all_urls(self):
         """Run all generators and yield (url, enpoint) tuples."""

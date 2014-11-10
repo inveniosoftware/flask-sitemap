@@ -31,6 +31,12 @@ SITEMAP_ENDPOINT_URL
 --------------------
 
 Default: ``/sitemap.xml``.
+
+SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS
+------------------------------------
+
+Default: ``False``.
+
 """
 
 SITEMAP_BLUEPRINT = 'flask_sitemap'
@@ -40,3 +46,5 @@ SITEMAP_BLUEPRINT_URL_PREFIX = '/'
 SITEMAP_ENDPOINT_URL = '/sitemap.xml'
 
 SITEMAP_URL_SCHEME = 'http'
+
+SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS = False

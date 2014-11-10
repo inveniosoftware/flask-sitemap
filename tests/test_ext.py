@@ -20,9 +20,9 @@ from .helpers import FlaskTestCase
 
 
 class TestSitemap(FlaskTestCase):
-    """
-    Tests of extension creation
-    """
+
+    """Test extension creation and functionality."""
+
     def test_version(self):
         # Assert that version number can be parsed.
         from flask_sitemap import __version__
@@ -86,3 +86,37 @@ class TestSitemap(FlaskTestCase):
                 os.path.dirname(__file__), 'data', 'sitemap.xml'), 'r') as f:
             out = f.read().format(now=now).strip()
             assert out == sitemap.sitemap()
+
+    def test_endpoints_without_arguments(self):
+        self.app.config['SERVER_NAME'] = 'www.example.com'
+        self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
+        sitemap = Sitemap(app=self.app)
+        now = datetime.now().isoformat()
+
+        @self.app.route('/')
+        def index():
+            pass
+
+        @self.app.route('/first')
+        def first():
+            pass
+
+        @self.app.route('/second')
+        def second():
+            pass
+
+        @self.app.route('/<username>')
+        def user(username):
+            pass
+
+        @sitemap.register_generator
+        def user():
+            yield 'user', {'username': 'third'}
+            yield 'user', {'username': 'fourth'}, now
+
+        results = [result['loc'] for result in sitemap._generate_all_urls()]
+        assert 'http://www.example.com/' in results
+        assert 'http://www.example.com/first' in results
+        assert 'http://www.example.com/second' in results
+        assert 'http://www.example.com/third' in results
+        assert 'http://www.example.com/fourth' in results
