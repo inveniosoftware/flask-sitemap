@@ -70,6 +70,7 @@ setup(
     platforms='any',
     install_requires=[
         'Flask',
+        'blinker',
     ],
     extras_require={
         'docs': ['sphinx'],

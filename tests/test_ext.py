@@ -15,7 +15,8 @@ import sys
 from contextlib import contextmanager
 from datetime import datetime
 from flask import request_started, request, url_for
-from flask_sitemap import Sitemap, config as default_config
+from flask_sitemap import Sitemap, config as default_config, \
+    sitemap_page_needed
 
 from .helpers import FlaskTestCase
 
@@ -219,3 +220,55 @@ class TestSitemap(FlaskTestCase):
         with self.app.test_client() as c:
             assert b('sitemapindex') in c.get('/sitemap.xml').data
             assert len(c.get('/sitemap1.xml.gz').data) > 0
+
+    def test_signals(self):
+        now = datetime.now().isoformat()
+        cache = {}
+
+        @sitemap_page_needed.connect
+        def create_page(app, page, urlset):
+            cache[page] = sitemap.render_page(urlset=urlset)
+
+        def load_page(fn):
+            from functools import wraps
+
+            @wraps(fn)
+            def loader(*args, **kwargs):
+                page = kwargs.get('page')
+                data = cache.get(page)
+                return data if data else fn(*args, **kwargs)
+            return loader
+
+        self.app.config['SERVER_NAME'] = 'www.example.com'
+        self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
+        self.app.config['SITEMAP_MAX_URL_COUNT'] = 10
+        self.app.config['SITEMAP_VIEW_DECORATORS'] = [load_page]
+        sitemap = Sitemap(app=self.app)
+
+        @self.app.route('/')
+        def index():
+            pass
+
+        @self.app.route('/first')
+        def first():
+            pass
+
+        @self.app.route('/second')
+        def second():
+            pass
+
+        @self.app.route('/<username>')
+        def user(username):
+            pass
+
+        @sitemap.register_generator
+        def user():
+            for number in range(20):
+                yield 'user', {'username': 'test{0}'.format(number)}
+
+        with self.app.test_client() as c:
+            assert b('sitemapindex') in c.get('/sitemap.xml').data
+            assert len(cache) == 3
+            for page in range(len(cache)):
+                assert cache[page+1].data == c.get(
+                    '/sitemap{0}.xml.gz'.format(page+1)).data

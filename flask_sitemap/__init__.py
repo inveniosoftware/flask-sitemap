@@ -150,13 +150,17 @@ class Sitemap(object):
         return render_template('flask_sitemap/sitemapindex.xml',
                                sitemaps=pages())
 
+    def render_page(self, urlset=None):
+        """Render GZipped sitemap template with given url set."""
+        return self.gzip_response(
+            render_template('flask_sitemap/sitemap.xml', urlset=urlset or [])
+        )
+
     def page(self, page):
         """Generate sitemap for given range of urls."""
         size = self.app.config['SITEMAP_MAX_URL_COUNT']
         urlset = islice(self._generate_all_urls(), (page-1)*size, page*size)
-        return self.gzip_response(
-            render_template('flask_sitemap/sitemap.xml', urlset=urlset)
-        )
+        return self.render_page(urlset=urlset)
 
     def register_generator(self, generator):
         """Register an URL generator.
@@ -231,4 +235,4 @@ class Sitemap(object):
         return response
 
 
-__all__ = ('Sitemap', '__version__')
+__all__ = ('Sitemap', '__version__', 'sitemap_page_needed')

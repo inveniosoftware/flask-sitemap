@@ -25,6 +25,7 @@ Contents
 
 .. contents::
    :local:
+   :depth: 1
    :backlinks: none
 
 
@@ -59,8 +60,8 @@ Flask-Sitemap has the following dependencies:
 Flask-Sitemap requires Python version 2.6, 2.7 or 3.3+
 
 
-Quickstart
-==========
+Usage
+=====
 
 This part of the documentation will show you how to get started in using
 Flask-Sitemap with Flask.
@@ -69,11 +70,8 @@ This guide assumes you have successfully installed Flask-Sitemap and a working
 understanding of Flask. If not, follow the installation steps and read about
 Flask at http://flask.pocoo.org/docs/.
 
-
-A Minimal Example
-^^^^^^^^^^^^^^^^^
-
-A minimal Flask-Sitemap usage example looks like this.
+Simple Example
+^^^^^^^^^^^^^^
 
 First, let's create the application and initialise the extension:
 
@@ -84,12 +82,91 @@ First, let's create the application and initialise the extension:
     app = Flask("myapp")
     ext = Sitemap(app=app)
 
+    @app.route('/')
+    def index():
+        pass
+
+    @ext.register_generator
+    def index():
+        # Not needed if you set SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS=True
+        yield 'index', {}
+
+    if __name__ == '__main__':
+        app.run(debug=True)
+
+If you save the above as ``app.py``, you can run the example
+application using your Python interpreter:
+
+.. code-block:: console
+
+    $ python app.py
+     * Running on http://127.0.0.1:5000/
+
+and you can observe generated sitemap on the example pages:
+
+.. code-block:: console
+
+    $ firefox http://127.0.0.1:5000/
+    $ firefox http://127.0.0.1:5000/sitemap.xml
+
+You should now be able to emulate this example in your own Flask
+applications.  For more information, please read the :ref:`indexpage`
+guide, the :ref:`caching` guide, and peruse the :ref:`api`.
+
+
+.. _indexpage:
+
+Index Page
+^^^^^^^^^^
+
+By default, a sitemap contains set of urls up to
+``SITEMAP_MAX_URL_COUNT``. When the limit is reached a sitemap index file
+with list of sitemaps is served instead. In order to ease :ref:`caching`
+of sitemaps a signal ``sitemap_page_needed`` is fired with current
+application object, page number and url generator.
+
+
+.. _caching:
+
+Caching
+^^^^^^^
+
+Large sites should implement caching or their sitemaps. The following
+example shows an basic in-memory cache that can be replaced by
+*Flask-Cache*.
+
+.. code-block:: python
+
+        from functools import wraps
+        from flask_sitemap import Sitemap, sitemap_page_needed
+
+        cache = {}  # replace by *Flask-Cache* instance or similar
+
+        @sitemap_page_needed.connect
+        def create_page(app, page, urlset):
+            cache[page] = sitemap.render_page(urlset=urlset)
+
+        def load_page(fn):
+            @wraps(fn)
+            def loader(*args, **kwargs):
+                page = kwargs.get('page')
+                data = cache.get(page)
+                return data if data else fn(*args, **kwargs)
+            return loader
+
+        self.app.config['SITEMAP_MAX_URL_COUNT'] = 10
+        self.app.config['SITEMAP_VIEW_DECORATORS'] = [load_page]
+
+        sitemap = Sitemap(app=self.app)
+
 
 Configuration
 =============
 
 .. automodule:: flask_sitemap.config
 
+
+.. _api:
 
 API
 ===
