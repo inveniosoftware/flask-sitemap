@@ -219,7 +219,7 @@ class TestSitemap(FlaskTestCase):
 
         with self.app.test_client() as c:
             assert b('sitemapindex') in c.get('/sitemap.xml').data
-            assert len(c.get('/sitemap1.xml.gz').data) > 0
+            assert len(c.get('/sitemap1.xml').data) > 0
 
     def test_signals(self):
         now = datetime.now().isoformat()
@@ -240,6 +240,7 @@ class TestSitemap(FlaskTestCase):
             return loader
 
         self.app.config['SERVER_NAME'] = 'www.example.com'
+        self.app.config['SITEMAP_GZIP'] = True
         self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
         self.app.config['SITEMAP_MAX_URL_COUNT'] = 10
         self.app.config['SITEMAP_VIEW_DECORATORS'] = [load_page]
@@ -267,8 +268,8 @@ class TestSitemap(FlaskTestCase):
                 yield 'user', {'username': 'test{0}'.format(number)}
 
         with self.app.test_client() as c:
-            assert b('sitemapindex') in c.get('/sitemap.xml').data
+            assert 200 == c.get('/sitemap.xml').status_code
             assert len(cache) == 3
             for page in range(len(cache)):
-                assert cache[page+1].data == c.get(
-                    '/sitemap{0}.xml.gz'.format(page+1)).data
+                assert sitemap.gzip_response(cache[page+1]).data == c.get(
+                    '/sitemap{0}.xml'.format(page+1)).data

@@ -31,7 +31,7 @@ import sys
 
 from collections import Mapping
 from flask import current_app, request, Blueprint, render_template, url_for, \
-    Response
+    Response, make_response
 from flask.signals import Namespace
 from functools import wraps
 from itertools import islice
@@ -119,12 +119,15 @@ class Sitemap(object):
 
     def _decorate(self, view):
         """Decorate view with given decorators."""
+        response = (self.gzip_response if self.app.config['SITEMAP_GZIP'] else
+                    self.xml_response)
+
         @wraps(view)
         def wrapper(*args, **kwargs):
             new_view = view
             for decorator in self.decorators:
                 new_view = decorator(new_view)
-            return new_view(*args, **kwargs)
+            return response(new_view(*args, **kwargs))
         return wrapper
 
     def sitemap(self):
@@ -139,22 +142,27 @@ class Sitemap(object):
                                    urlset=filter(None, urlset))
 
         def pages():
-            yield {'loc': url_for('flask_sitemap.page', page=1)}
+            kwargs = dict(
+                _external=True,
+                _scheme=self.app.config.get('SITEMAP_URL_SCHEME')
+            )
+            kwargs['page'] = 1
+            yield {'loc': url_for('flask_sitemap.page', **kwargs)}
             sitemap_page_needed.send(current_app._get_current_object(),
                                      page=1, urlset=urlset)
-            for page, urlset_ in enumerate(run):
-                yield {'loc': url_for('flask_sitemap.page', page=page+2)}
+            for urlset_ in run:
+                kwargs['page'] += 1
+                yield {'loc': url_for('flask_sitemap.page', **kwargs)}
                 sitemap_page_needed.send(current_app._get_current_object(),
-                                         page=page+2, urlset=urlset_)
+                                         page=kwargs['page'], urlset=urlset_)
 
         return render_template('flask_sitemap/sitemapindex.xml',
                                sitemaps=pages())
 
     def render_page(self, urlset=None):
         """Render GZipped sitemap template with given url set."""
-        return self.gzip_response(
-            render_template('flask_sitemap/sitemap.xml', urlset=urlset or [])
-        )
+        return render_template('flask_sitemap/sitemap.xml',
+                               urlset=urlset or [])
 
     def page(self, page):
         """Generate sitemap for given range of urls."""
@@ -231,6 +239,13 @@ class Sitemap(object):
         response.data = gzip_buffer.getvalue()
         response.headers['Content-Encoding'] = 'gzip'
         response.headers['Content-Length'] = len(response.data)
+
+        return response
+
+    def xml_response(self, data):
+        """Standard XML response."""
+        response = make_response(data)
+        response.headers["Content-Type"] = "application/xml"
 
         return response
 

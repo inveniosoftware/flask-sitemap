@@ -22,6 +22,11 @@ If ``None`` or ``False`` then the Blueprint is not registered.
 
 Default: ``flask_sitemap``.
 
+SITEMAP_GZIP
+------------
+
+Default: ``False``.
+
 SITEMAP_BLUEPRINT_URL_PREFIX
 ----------------------------
 
@@ -42,7 +47,7 @@ Return GZipped sitemap for given page range of urls.
 
 .. note:: It is strongly recommended to provide caching decorator.
 
-Default: ``sitemap<int:page>.xml.gz``
+Default: ``sitemap<int:page>.xml``
 
 SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS
 ------------------------------------
@@ -75,7 +80,9 @@ SITEMAP_BLUEPRINT_URL_PREFIX = '/'
 
 SITEMAP_ENDPOINT_URL = 'sitemap.xml'
 
-SITEMAP_ENDPOINT_PAGE_URL = 'sitemap<int:page>.xml.gz'
+SITEMAP_ENDPOINT_PAGE_URL = 'sitemap<int:page>.xml'
+
+SITEMAP_GZIP = False
 
 SITEMAP_URL_SCHEME = 'http'
 
