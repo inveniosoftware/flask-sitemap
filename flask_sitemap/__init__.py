@@ -135,7 +135,11 @@ class Sitemap(object):
         size = self.app.config['SITEMAP_MAX_URL_COUNT']
         args = [iter(self._generate_all_urls())] * size
         run = zip_longest(*args)
-        urlset = next(run)
+        try:
+            urlset = next(run)
+        except StopIteration:
+            # Special case with empty list of urls.
+            urlset = [None]
 
         if urlset[-1] is None:
             return render_template('flask_sitemap/sitemap.xml',

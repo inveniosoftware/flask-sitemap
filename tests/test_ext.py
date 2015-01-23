@@ -64,6 +64,11 @@ class TestSitemap(FlaskTestCase):
             if k.startswith('SITEMAP_'):
                 assert self.app.config.get(k) == getattr(default_config, k)
 
+    def test_empty_generator(self):
+        Sitemap(app=self.app)
+        with self.app.test_client() as c:
+            assert b('loc') not in c.get('/sitemap.xml').data
+
     def test_url_generator(self):
         self.app.config['SERVER_NAME'] = 'www.example.com'
         sitemap = Sitemap(app=self.app)
