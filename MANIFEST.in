@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-include LICENSE AUTHORS CHANGES CONTRIBUTING.rst README.rst
-include .coveragerc run-tests.sh
+include *.rst
+include *.sh
+include .coveragerc
+include LICENSE AUTHORS CHANGES
 include docs/*.rst docs/*.py docs/Makefile
+include pytest.ini
 include tests/*.py
-recursive-include docs/_themes *.py *.css *.css_t *.conf *.html README
+include tox.ini
+
 recursive-include docs/_templates *.html
+recursive-include docs/_themes *.py *.css *.css_t *.conf *.html README
+recursive-include flask_sitemap *.xml
+recursive-include tests *.xml

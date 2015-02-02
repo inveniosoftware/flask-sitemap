@@ -2,7 +2,7 @@
  Flask-Sitemap v0.1.0 is released
 ==================================
 
-Flask-Sitemap v0.1.0 was released on FIXME.
+Flask-Sitemap v0.1.0 was released on February 3, 2015.
 
 About
 -----
@@ -12,7 +12,17 @@ Flask-Sitemap is a Flask extension helping with sitemap generation.
 What's new
 ----------
 
-- Initial implemetation. (#1)
+- Initial public release. (#12)
+- Support for configurable gzip response.
+- Quickstart example for signals and caching. (#8)
+- Support for sitemap pages.  (#3)
+- Adds an option ``SITEMAP_VIEW_DECORATORS`` for specifying list of view
+  decorators.  (#4)
+- Adds support for ignoring certain endpoints through
+  ``SITEMAP_IGNORE_ENDPOINTS`` configuration option.  (#2)
+- Adds new option to automatically include all endpoints without
+  parameters. In order to enable this feature set
+  ``SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS`` to ``True``. (#2)
 
 Installation
 ------------

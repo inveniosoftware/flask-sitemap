@@ -4,6 +4,16 @@ Changelog
 Here you can see the full list of changes between each Flask-Sitemap
 release.
 
-Version 0.1
+Version 0.1 (released 2015-02-03)
 
-- Initial public release.
+- Initial public release. (#12)
+- Support for configurable gzip response.
+- Quickstart example for signals and caching. (#8)
+- Support for sitemap pages.  (#3)
+- Adds an option ``SITEMAP_VIEW_DECORATORS`` for specifying list of view
+  decorators.  (#4)
+- Adds support for ignoring certain endpoints through
+  ``SITEMAP_IGNORE_ENDPOINTS`` configuration option.  (#2)
+- Adds new option to automatically include all endpoints without
+  parameters. In order to enable this feature set
+  ``SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS`` to ``True``. (#2)
