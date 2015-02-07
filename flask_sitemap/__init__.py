@@ -28,11 +28,13 @@ from __future__ import absolute_import
 
 import gzip
 import sys
+import os
 
 from collections import Mapping
 from flask import current_app, request, Blueprint, render_template, url_for, \
     Response, make_response
 from flask.signals import Namespace
+from flask.ext.script import Manager
 from functools import wraps
 from itertools import islice
 from werkzeug.utils import import_string
@@ -252,6 +254,22 @@ class Sitemap(object):
         response.headers["Content-Type"] = "application/xml"
 
         return response
+
+SitemapCommand = Manager(usage="Generate static sitemap")
+
+
+@SitemapCommand.command
+def generate():
+    sitemap = current_app.extensions['sitemap']
+    basedir = os.path.abspath(current_app.config.get('SITEMAP_DIRECTORY'))
+    if not os.path.exists(basedir):
+        os.makedirs(basedir)
+
+    content = sitemap.sitemap()
+    output_file = open(
+        os.path.join(basedir, current_app.config.get("SITEMAP_NAME")), 'w')
+    output_file.write(content)
+    output_file.close()
 
 
 __all__ = ('Sitemap', '__version__', 'sitemap_page_needed')

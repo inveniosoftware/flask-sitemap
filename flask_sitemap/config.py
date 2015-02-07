@@ -72,6 +72,14 @@ there is 10MB limitation for the file.
 
 Default: ``10000``.
 
+SITEMAP_DIRECTORY
+-----------------
+
+The static directory name where sitemap xml files will be created. The
+directory path is relative to flask script directory
+
+Default: ``sitemap``.
+
 """
 
 SITEMAP_BLUEPRINT = 'flask_sitemap'
@@ -93,3 +101,7 @@ SITEMAP_IGNORE_ENDPOINTS = None
 SITEMAP_VIEW_DECORATORS = []
 
 SITEMAP_MAX_URL_COUNT = 10000
+
+SITEMAP_DIRECTORY = 'sitemap'
+
+SITEMAP_NAME = 'sitemap.xml'
