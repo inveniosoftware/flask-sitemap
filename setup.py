@@ -71,6 +71,7 @@ setup(
     install_requires=[
         'Flask',
         'blinker',
+        'Flask-Script',
     ],
     extras_require={
         'docs': ['sphinx'],
