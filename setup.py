@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -47,13 +47,24 @@ with open(os.path.join('flask_sitemap', 'version.py'), 'rt') as f:
         f.read()
     ).group('version')
 
+extras_require = {
+    'docs': ['sphinx'],
+    'cli': ['Flask-Script'],
+}
+
 tests_require = [
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
     'pytest>=2.6.1',
-    'coverage'
+    'coverage',
 ]
+
+# Extend dependencies with extra packages
+for key, extra in extras_require.items():
+    if key != 'docs':
+        tests_require += extra
+        extras_require['docs'] += extra
 
 setup(
     name='Flask-Sitemap',
@@ -72,9 +83,7 @@ setup(
         'Flask',
         'blinker',
     ],
-    extras_require={
-        'docs': ['sphinx'],
-    },
+    extras_require=extras_require,
     tests_require=tests_require,
     cmdclass={'test': PyTest},
     classifiers=[

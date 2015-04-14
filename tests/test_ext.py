@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -10,21 +10,19 @@
 from __future__ import absolute_import
 
 import os
+import shutil
 import sys
 
 from contextlib import contextmanager
 from datetime import datetime
+from tempfile import mkdtemp
+
 from flask import request_started, request, url_for
-from flask_sitemap import Sitemap, config as default_config, \
-    sitemap_page_needed
+from flask_script import Manager
+from flask_sitemap import Sitemap, b, config as default_config, \
+    script, sitemap_page_needed
 
 from .helpers import FlaskTestCase
-
-# PY2/3 compatibility
-if sys.version_info[0] == 3:
-    b = lambda s: s.encode("latin-1")
-else:
-    b = lambda s: s
 
 
 class TestSitemap(FlaskTestCase):
@@ -222,9 +220,27 @@ class TestSitemap(FlaskTestCase):
             for number in range(20):
                 yield 'user', {'username': 'test{0}'.format(number)}
 
-        with self.app.test_client() as c:
-            assert b('sitemapindex') in c.get('/sitemap.xml').data
-            assert len(c.get('/sitemap1.xml').data) > 0
+        directory = mkdtemp()
+        manager = Manager(self.app)
+        manager.add_command('sitemap', script.Sitemap())
+
+        try:
+            manager.handle('manage.py', ['sitemap', '-o', directory])
+
+            with self.app.test_client() as c:
+                data = c.get('/sitemap.xml').data
+                data1 = c.get('/sitemap1.xml').data
+
+                assert b('sitemapindex') in data
+                assert len(data1) > 0
+
+                with open(os.path.join(directory, 'sitemap.xml'), 'r') as f:
+                    assert b(f.read()) == data
+
+                with open(os.path.join(directory, 'sitemap1.xml'), 'r') as f:
+                    assert b(f.read()) == data1
+        finally:
+            shutil.rmtree(directory)
 
     def test_signals(self):
         now = datetime.now().isoformat()

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
 """The details of the application settings that can be customized.
-
 
 SITEMAP_URL_METHOD
 ------------------
@@ -71,7 +70,6 @@ The maximum number of urls per one sitemap file can be up to 50000, however
 there is 10MB limitation for the file.
 
 Default: ``10000``.
-
 """
 
 SITEMAP_BLUEPRINT = 'flask_sitemap'

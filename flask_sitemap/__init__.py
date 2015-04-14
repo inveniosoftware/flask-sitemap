@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -47,12 +47,16 @@ if sys.version_info[0] == 3:  # pragma: no cover
     BytesIO = io.BytesIO
     string_types = str,
     from itertools import zip_longest
-    b = lambda s: s.encode("latin-1")
+
+    def b(s):
+        return s.encode("latin-1")
 else:
     from cStringIO import StringIO as BytesIO
     string_types = basestring,
     from itertools import izip_longest as zip_longest
-    b = lambda s: s
+
+    def b(s):
+        return s
 
 
 # Signals
