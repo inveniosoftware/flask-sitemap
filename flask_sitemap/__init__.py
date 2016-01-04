@@ -244,6 +244,7 @@ class Sitemap(object):
         gzip_file.close()
         response = Response()
         response.data = gzip_buffer.getvalue()
+        response.headers['Content-Type'] = 'application/octet-stream'
         response.headers['Content-Encoding'] = 'gzip'
         response.headers['Content-Length'] = len(response.data)
 
