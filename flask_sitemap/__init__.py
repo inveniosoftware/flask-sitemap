@@ -68,7 +68,6 @@ sitemap_page_needed = _signals.signal('sitemap-page-needed')
 
 
 class Sitemap(object):
-
     """Flask extension implementation."""
 
     def __init__(self, app=None):

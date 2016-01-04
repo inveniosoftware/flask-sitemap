@@ -26,7 +26,6 @@ from flask_sitemap import sitemap_page_needed
 
 
 class Sitemap(Command):
-
     """Generate static sitemap."""
 
     option_list = (
