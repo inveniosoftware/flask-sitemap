@@ -21,7 +21,7 @@
 Flask-Sitemap is a Flask extension helping with sitemap generation.
 
 Contents
---------
+========
 
 .. contents::
    :local:
@@ -49,7 +49,7 @@ The development version can be downloaded from `its page at GitHub
     $ ./run-tests.sh
 
 Requirements
-^^^^^^^^^^^^
+------------
 
 Flask-Sitemap has the following dependencies:
 
@@ -71,7 +71,7 @@ understanding of Flask. If not, follow the installation steps and read about
 Flask at http://flask.pocoo.org/docs/.
 
 Simple Example
-^^^^^^^^^^^^^^
+--------------
 
 First, let's create the application and initialise the extension:
 
@@ -117,7 +117,7 @@ guide, the :ref:`caching` guide, and peruse the :ref:`api`.
 .. _indexpage:
 
 Index Page
-^^^^^^^^^^
+----------
 
 By default, a sitemap contains set of urls up to
 ``SITEMAP_MAX_URL_COUNT``. When the limit is reached a sitemap index file
@@ -129,7 +129,7 @@ application object, page number and url generator.
 .. _caching:
 
 Caching
-^^^^^^^
+-------
 
 Large sites should implement caching or their sitemaps. The following
 example shows an basic in-memory cache that can be replaced by
@@ -175,7 +175,7 @@ This documentation section is automatically generated from Flask-Sitemap's
 source code.
 
 Flask-Sitemap
-^^^^^^^^^^^^^
+-------------
 
 .. automodule:: flask_sitemap
 

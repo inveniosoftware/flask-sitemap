@@ -4,7 +4,35 @@ Changelog
 Here you can see the full list of changes between each Flask-Sitemap
 release.
 
-Version 0.1 (released 2015-02-03)
+Version 0.2.0 (released 2016-01-05)
+-----------------------------------
+
+New features
+~~~~~~~~~~~~
+
+- Adds new command line interface to generate sitemap. (#13)
+
+Improved features
+~~~~~~~~~~~~~~~~~
+
+- Adds 'application/octet-stream' content type to GZipped response.
+  (#20)
+
+Bug fixes
+~~~~~~~~~
+
+- Uses pytest-runner as distutils command with dependency resolution.
+
+Notes
+~~~~~
+
+- Improves integration of PyTest and addresses problem with missing
+  test requirements.  (#15)
+- If you want to use command line interface install dependencies using
+  `pip install flask-sitemap[cli]`.
+
+Version 0.1.0 (released 2015-02-03)
+-----------------------------------
 
 - Initial public release. (#12)
 - Support for configurable gzip response.
