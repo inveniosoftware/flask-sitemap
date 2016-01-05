@@ -12,36 +12,9 @@ import re
 import sys
 
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
 
-
-class PyTest(TestCommand):
-
-    user_options = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        try:
-            from ConfigParser import ConfigParser
-        except ImportError:
-            from configparser import ConfigParser
-        config = ConfigParser()
-        config.read("pytest.ini")
-        self.pytest_args = config.get("pytest", "addopts").split(" ")
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        import _pytest.config
-        pm = _pytest.config.get_plugin_manager()
-        pm.consider_setuptools_entrypoints()
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
+needs_pytest = set(['pytest', 'test', 'ptr']).intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
 
 # Get the version string. Cannot be done with import!
 with open(os.path.join('flask_sitemap', 'version.py'), 'rt') as f:
@@ -57,9 +30,9 @@ extras_require = {
 
 tests_require = [
     'pytest-cache>=1.0',
-    'pytest-cov>=1.8.0',
+    'pytest-cov>=2.2.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=2.6.1',
+    'pytest>=2.8.5',
     'coverage',
 ]
 
@@ -82,13 +55,13 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
+    setup_requires=pytest_runner,
     install_requires=[
         'Flask',
         'blinker',
     ],
     extras_require=extras_require,
     tests_require=tests_require,
-    cmdclass={'test': PyTest},
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
