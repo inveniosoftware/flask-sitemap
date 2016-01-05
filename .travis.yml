@@ -9,6 +9,8 @@
 
 language: python
 
+sudo: false
+
 python:
   - "2.6"
   - "2.7"
@@ -32,3 +34,14 @@ after_success:
 
 notifications:
   email: false
+
+deploy:
+  provider: pypi
+  user: jirikuncar
+  password:
+    secure: UQNijeabB3fhBi7oCpnRFciJwwfccwTIkdRkIWhmZPod86+kUoh900/+nEEkZdJ9Ac3LMtQUcEmsX1on5/Hd4AfQJ7XyCS6wGShya25itW7X/nd5ZDF+fxRS6ElPFkAk0eTxEnn3zazshh/4W5C8m+iD5mcqQBlq738ld19DT/Y=
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
+    python: "2.7"
+    repo: inveniosoftware/flask-sitemap
