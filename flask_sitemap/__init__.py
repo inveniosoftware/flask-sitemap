@@ -193,8 +193,9 @@ class Sitemap(object):
     def _routes_without_params(self):
         if self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS']:
             for rule in self.app.url_map.iter_rules():
-                if 'GET' in rule.methods and len(rule.arguments) == 0:
-                    yield rule.endpoint, {}
+                if rule.endpoint not in self.app.config['SITEMAP_EXCLUDE_LIST']:
+                    if 'GET' in rule.methods and len(rule.arguments) == 0:
+                        yield rule.endpoint, {}
 
     def _generate_all_urls(self):
         """Run all generators and yield (url, enpoint) tuples."""
