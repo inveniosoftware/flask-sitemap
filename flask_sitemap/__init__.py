@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014, 2015 CERN.
+# Copyright (C) 2014, 2015, 2016 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -192,8 +192,10 @@ class Sitemap(object):
 
     def _routes_without_params(self):
         if self.app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS']:
+            ignore = set(self.app.config['SITEMAP_IGNORE_ENDPOINTS'] or [])
             for rule in self.app.url_map.iter_rules():
-                if 'GET' in rule.methods and len(rule.arguments) == 0:
+                if rule.endpoint not in ignore and 'GET' in rule.methods and \
+                        len(rule.arguments) == 0:
                     yield rule.endpoint, {}
 
     def _generate_all_urls(self):
