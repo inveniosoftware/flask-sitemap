@@ -238,7 +238,7 @@ class Sitemap(object):
                     yield result
 
     def gzip_response(self, data):
-        """GZip response data and create new Response instance."""
+        """Gzip response data and create new Response instance."""
         gzip_buffer = BytesIO()
         gzip_file = gzip.GzipFile(mode='wb', compresslevel=6,
                                   fileobj=gzip_buffer)

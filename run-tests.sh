@@ -7,6 +7,6 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-pep257 flask_sitemap && \
+pydocstyle flask_sitemap && \
 sphinx-build -qnNW docs docs/_build/html && \
 python setup.py test
