@@ -11,7 +11,7 @@ include *.rst
 include *.sh
 include .coveragerc
 include LICENSE AUTHORS CHANGES
-include docs/*.rst docs/*.py docs/Makefile
+include docs/*.rst docs/*.py docs/Makefile docs/requirements.txt
 include pytest.ini
 include tests/*.py
 include tox.ini

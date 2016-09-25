@@ -41,7 +41,7 @@ Installation
 Documentation
 -------------
 
-   http://flask-sitemap.readthedocs.org/en/v0.2.0
+   http://flask-sitemap.readthedocs.io/en/v0.2.0
 
 Homepage
 --------

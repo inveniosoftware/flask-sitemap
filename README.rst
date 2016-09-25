@@ -33,7 +33,7 @@ Flask-Sitemap is on PyPI so all you need is: ::
 Documentation
 =============
 
-Documentation is readable at http://flask-sitemap.readthedocs.org or can
+Documentation is readable at http://flask-sitemap.readthedocs.io or can
 be built using Sphinx: ::
 
     git submodule init
