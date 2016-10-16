@@ -9,7 +9,7 @@
 
 """The details of the application settings that can be customized.
 
-SITEMAP_URL_METHOD
+SITEMAP_URL_SCHEME
 ------------------
 
 Default: ``http``.
