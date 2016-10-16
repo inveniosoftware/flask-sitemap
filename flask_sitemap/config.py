@@ -58,8 +58,8 @@ SITEMAP_IGNORE_ENDPOINTS
 
 Default: ``None``.
 
-SITEMAP_VIEW_DECORAROS
-----------------------
+SITEMAP_VIEW_DECORATORS
+-----------------------
 
 Default: ``[]``.
 
