@@ -9,7 +9,7 @@
 
 """The details of the application settings that can be customized.
 
-SITEMAP_URL_METHOD
+SITEMAP_URL_SCHEME
 ------------------
 
 Default: ``http``.
@@ -58,8 +58,8 @@ SITEMAP_IGNORE_ENDPOINTS
 
 Default: ``None``.
 
-SITEMAP_VIEW_DECORAROS
-----------------------
+SITEMAP_VIEW_DECORATORS
+-----------------------
 
 Default: ``[]``.
 
