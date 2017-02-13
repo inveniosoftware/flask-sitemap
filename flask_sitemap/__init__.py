@@ -2,13 +2,13 @@
 #
 # This file is part of Flask-Sitemap
 # Copyright (C) 2014, 2015, 2016 CERN.
+# Copyright (C) 2018 ETH Zurich, Swiss Data Science Center, Jiri Kuncar.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-"""
-Flask-Sitemap generates an application sitemap.xml.
+"""Flask extension for generating page ``/sitemap.xml``.
 
 Initialization of the extension:
 
@@ -70,16 +70,25 @@ sitemap_page_needed = _signals.signal('sitemap-page-needed')
 class Sitemap(object):
     """Flask extension implementation."""
 
-    def __init__(self, app=None):
+    def __init__(self, app=None, command_name='sitemap'):
         """Initialize login callback."""
         self.decorators = []
         self.url_generators = [self._routes_without_params]
+        self.command_name = command_name
 
         if app is not None:
             self.init_app(app)
 
-    def init_app(self, app):
-        """Initialize a Flask application."""
+    def init_app(self, app, command_name=None):
+        """Initialize a Flask application.
+
+        :param app: Application to register.
+        :param command_name: Register a Click command with this name, or
+                             skip if ``False``.
+
+        .. versionadded:: 0.3.0
+           The *command_name* parameter.
+        """
         self.app = app
         # Follow the Flask guidelines on usage of app.extensions
         if not hasattr(app, 'extensions'):
@@ -119,6 +128,11 @@ class Sitemap(object):
                 self.blueprint,
                 url_prefix=app.config.get('SITEMAP_BLUEPRINT_URL_PREFIX')
             )
+
+        if (command_name or (command_name is None and self.command_name)) \
+                and hasattr(app, 'cli'):
+            from .cli import sitemap
+            app.cli.add_command(sitemap, command_name or self.command_name)
 
     def _decorate(self, view):
         """Decorate view with given decorators."""

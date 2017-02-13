@@ -17,7 +17,9 @@ from contextlib import contextmanager
 from datetime import datetime
 from tempfile import mkdtemp
 
+from click.testing import CliRunner
 from flask import request_started, request, url_for
+from flask.cli import ScriptInfo
 from flask_script import Manager
 from flask_sitemap import Sitemap, b, config as default_config, \
     script, sitemap_page_needed
@@ -219,6 +221,34 @@ class TestSitemap(FlaskTestCase):
         def user():
             for number in range(20):
                 yield 'user', {'username': 'test{0}'.format(number)}
+
+        directory = mkdtemp()
+        runner = CliRunner()
+
+        try:
+            result = runner.invoke(
+                self.app.cli,
+                ['sitemap', '-o', directory, '-v'],
+                obj=ScriptInfo(create_app=lambda _: self.app),
+            )
+            assert b('sitemap1.xml\nsitemap2.xml'
+                     '\nsitemap3.xml\nsitemap.xml') in result.output
+            # assert result.exit_code == 0
+
+            with self.app.test_client() as c:
+                data = c.get('/sitemap.xml').data
+                data1 = c.get('/sitemap1.xml').data
+
+                assert b('sitemapindex') in data
+                assert len(data1) > 0
+
+                with open(os.path.join(directory, 'sitemap.xml'), 'r') as f:
+                    assert b(f.read()) == data
+
+                with open(os.path.join(directory, 'sitemap1.xml'), 'r') as f:
+                    assert b(f.read()) == data1
+        finally:
+            shutil.rmtree(directory)
 
         directory = mkdtemp()
         manager = Manager(self.app)

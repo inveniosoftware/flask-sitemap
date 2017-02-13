@@ -2,6 +2,7 @@
 #
 # This file is part of Flask-Sitemap
 # Copyright (C) 2014, 2015 CERN.
+# Copyright (C) 2018 ETH Zurich, Swiss Data Science Center, Jiri Kuncar.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -72,12 +73,11 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Development Status :: 5 - Production/Stable'
     ],
 )

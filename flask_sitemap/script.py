@@ -2,12 +2,17 @@
 #
 # This file is part of Flask-Sitemap
 # Copyright (C) 2015 CERN.
+# Copyright (C) 2018 ETH Zurich, Swiss Data Science Center, Jiri Kuncar.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-"""Simple command line interface for sitemap generation."""
+"""Simple command line interface for sitemap generation.
+
+.. deprecated:: 0.3.0
+   Use :func:`flask_sitemap.cli:sitemap` instead.
+"""
 
 import os
 import codecs
