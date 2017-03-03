@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-Sitemap
-# Copyright (C) 2014, 2015, 2016 CERN.
+# Copyright (C) 2014, 2015, 2016, 2017 CERN.
 # Copyright (C) 2018 ETH Zurich, Swiss Data Science Center, Jiri Kuncar.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@ import sys
 
 from collections import Mapping
 from flask import current_app, request, Blueprint, render_template, url_for, \
-    Response, make_response
+    Response, make_response, has_request_context
 from flask.signals import Namespace
 from functools import wraps
 from itertools import islice
@@ -213,8 +213,8 @@ class Sitemap(object):
             _external=True,
             _scheme=self.app.config.get('SITEMAP_URL_SCHEME')
         )
-        # A request context is required to use url_for
-        with self.app.test_request_context():
+
+        def generator():
             for generator in self.url_generators:
                 for generated in generator():
                     result = {}
@@ -244,6 +244,15 @@ class Sitemap(object):
                         values.update(kwargs)
                         result['loc'] = url_for(endpoint, **values)
                     yield result
+
+        # A request context is required to use url_for
+        if not has_request_context():
+            with self.app.test_request_context():
+                for result in generator():
+                    yield result
+        else:
+            for result in generator():
+                yield result
 
     def gzip_response(self, data):
         """Gzip response data and create new Response instance."""
