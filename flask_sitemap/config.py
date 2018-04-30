@@ -37,7 +37,7 @@ SITEMAP_ENDPOINT_URL
 Return sitemap index or sitemap for pages with less than
 ``SITEMAP_MAX_URL_COUNT`` urls.
 
-Default: ``sitemap.xml``.
+Default: ``/sitemap.xml``.
 
 SITEMAP_ENDPOINT_PAGE_URL
 -------------------------
@@ -46,7 +46,7 @@ Return GZipped sitemap for given page range of urls.
 
 .. note:: It is strongly recommended to provide caching decorator.
 
-Default: ``sitemap<int:page>.xml``
+Default: ``/sitemap<int:page>.xml``
 
 SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS
 ------------------------------------
@@ -76,9 +76,9 @@ SITEMAP_BLUEPRINT = 'flask_sitemap'
 
 SITEMAP_BLUEPRINT_URL_PREFIX = '/'
 
-SITEMAP_ENDPOINT_URL = 'sitemap.xml'
+SITEMAP_ENDPOINT_URL = '/sitemap.xml'
 
-SITEMAP_ENDPOINT_PAGE_URL = 'sitemap<int:page>.xml'
+SITEMAP_ENDPOINT_PAGE_URL = '/sitemap<int:page>.xml'
 
 SITEMAP_GZIP = False
 
