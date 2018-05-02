@@ -1,8 +1,8 @@
 ======================
- Flask-Sitemap v0.2.0
+ Flask-Sitemap v0.3.0
 ======================
 
-Flask-Sitemap v0.2.0 was released on January 5, 2016.
+Flask-Sitemap v0.3.0 was released on May 2, 2018.
 
 About
 -----
@@ -12,36 +12,36 @@ Flask-Sitemap is a Flask extension helping with sitemap generation.
 New features
 ------------
 
-- Adds new command line interface to generate sitemap. (#13)
+- Adds integration with Click library for Flask 0.11+.
 
 Improved features
 -----------------
 
-- Adds 'application/octet-stream' content type to GZipped response.
-  (#20)
+- Improves exclusion of specific URLs without parameters
+  from to the sitemap.  (closes #24) (closes #25) (closes #26)
 
 Bug fixes
 ---------
 
-- Uses pytest-runner as distutils command with dependency resolution.
+- Reuses exiting request context if it exits. (closes #35)
+- Prepends '/' to endpoint urls for compatibility with Flask 1.0.
+- Improves documentation about ``SITEMAP_URL_SCHEME``.
+- Fixes typo in ``SITEMAP_VIEW_DECORATORS``.
 
 Notes
 -----
 
-- Improves integration of PyTest and addresses problem with missing
-  test requirements.  (#15)
-- If you want to use command line interface install dependencies using
-  `pip install flask-sitemap[cli]`.
+- Removes support for Python 2.6 and 3.3.
 
 Installation
 ------------
 
-   $ pip install Flask-Sitemap==0.2.0
+   $ pip install Flask-Sitemap==0.3.0
 
 Documentation
 -------------
 
-   http://flask-sitemap.readthedocs.io/en/v0.2.0
+   https://flask-sitemap.readthedocs.io/en/v0.3.0
 
 Homepage
 --------
