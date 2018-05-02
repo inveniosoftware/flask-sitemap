@@ -253,7 +253,7 @@ class Sitemap(object):
         return response
 
     def xml_response(self, data):
-        """Standard XML response."""
+        """Return a standard XML response."""
         response = make_response(data)
         response.headers["Content-Type"] = "application/xml"
 
