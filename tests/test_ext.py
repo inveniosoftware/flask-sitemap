@@ -21,7 +21,7 @@ from click.testing import CliRunner
 from flask import request_started, request, url_for
 from flask.cli import ScriptInfo
 from flask_script import Manager
-from flask_sitemap import Sitemap, b, config as default_config, \
+from flask_sitemap import Sitemap, config as default_config, \
     script, sitemap_page_needed
 
 from .helpers import FlaskTestCase
@@ -67,7 +67,7 @@ class TestSitemap(FlaskTestCase):
     def test_empty_generator(self):
         Sitemap(app=self.app)
         with self.app.test_client() as c:
-            assert b('loc') not in c.get('/sitemap.xml').data
+            assert b'loc' not in c.get('/sitemap.xml').data
 
     def test_url_generator(self):
         self.app.config['SERVER_NAME'] = 'www.example.com'
@@ -187,12 +187,12 @@ class TestSitemap(FlaskTestCase):
         assert second in sitemap.decorators
 
         with self.app.test_client() as c:
-            assert b('dummy') == c.get('/sitemap.xml').data
+            assert b'dummy' == c.get('/sitemap.xml').data
 
         sitemap.decorators.append(third)
 
         with self.app.test_client() as c:
-            assert b('third') == c.get('/sitemap.xml').data
+            assert b'third' == c.get('/sitemap.xml').data
 
     def test_pagination(self):
         self.app.config['SERVER_NAME'] = 'www.example.com'
@@ -231,22 +231,22 @@ class TestSitemap(FlaskTestCase):
                 ['sitemap', '-o', directory, '-v'],
                 obj=ScriptInfo(create_app=lambda _: self.app),
             )
-            assert b('sitemap1.xml\nsitemap2.xml'
-                     '\nsitemap3.xml\nsitemap.xml') in result.output
+            assert 'sitemap1.xml\nsitemap2.xml\nsitemap3.xml\nsitemap.xml' \
+                in result.output
             # assert result.exit_code == 0
 
             with self.app.test_client() as c:
                 data = c.get('/sitemap.xml').data
                 data1 = c.get('/sitemap1.xml').data
 
-                assert b('sitemapindex') in data
+                assert b'sitemapindex' in data
                 assert len(data1) > 0
 
-                with open(os.path.join(directory, 'sitemap.xml'), 'r') as f:
-                    assert b(f.read()) == data
+                with open(os.path.join(directory, 'sitemap.xml'), 'rb') as f:
+                    assert f.read() == data
 
-                with open(os.path.join(directory, 'sitemap1.xml'), 'r') as f:
-                    assert b(f.read()) == data1
+                with open(os.path.join(directory, 'sitemap1.xml'), 'rb') as f:
+                    assert f.read() == data1
         finally:
             shutil.rmtree(directory)
 
@@ -261,14 +261,14 @@ class TestSitemap(FlaskTestCase):
                 data = c.get('/sitemap.xml').data
                 data1 = c.get('/sitemap1.xml').data
 
-                assert b('sitemapindex') in data
+                assert b'sitemapindex' in data
                 assert len(data1) > 0
 
-                with open(os.path.join(directory, 'sitemap.xml'), 'r') as f:
-                    assert b(f.read()) == data
+                with open(os.path.join(directory, 'sitemap.xml'), 'rb') as f:
+                    assert f.read() == data
 
-                with open(os.path.join(directory, 'sitemap1.xml'), 'r') as f:
-                    assert b(f.read()) == data1
+                with open(os.path.join(directory, 'sitemap1.xml'), 'rb') as f:
+                    assert f.read() == data1
         finally:
             shutil.rmtree(directory)
 

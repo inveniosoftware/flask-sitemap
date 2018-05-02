@@ -47,16 +47,10 @@ if sys.version_info[0] == 3:  # pragma: no cover
     BytesIO = io.BytesIO
     string_types = str,
     from itertools import zip_longest
-
-    def b(s):
-        return s.encode("latin-1")
 else:
     from cStringIO import StringIO as BytesIO
     string_types = basestring,
     from itertools import izip_longest as zip_longest
-
-    def b(s):
-        return s
 
 
 # Signals
@@ -256,7 +250,7 @@ class Sitemap(object):
         gzip_buffer = BytesIO()
         gzip_file = gzip.GzipFile(mode='wb', compresslevel=6,
                                   fileobj=gzip_buffer)
-        gzip_file.write(b(data))
+        gzip_file.write(data.encode('utf-8'))
         gzip_file.close()
         response = Response()
         response.data = gzip_buffer.getvalue()
