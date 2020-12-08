@@ -15,12 +15,13 @@
 
 from __future__ import absolute_import
 
-import os
 import codecs
+import os
 import warnings
 
 import click
 from flask import current_app, url_for
+
 try:
     from flask.cli import with_appcontext
 except ImportError:  # pragma: no cover

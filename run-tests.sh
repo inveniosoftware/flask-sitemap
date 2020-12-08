@@ -1,12 +1,20 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
 #
-# This file is part of Flask-Sitemap
-# Copyright (C) 2013, 2014 CERN.
+# This file is part of Invenio.
+# Copyright (C) 2013-2020 CERN.
 #
 # Flask-Sitemap is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-pydocstyle flask_sitemap && \
-sphinx-build -qnNW docs docs/_build/html && \
-python setup.py test
+# Quit on errors
+set -o errexit
+
+# Quit on unbound symbols
+set -o nounset
+
+python -m check_manifest --ignore ".*-requirements.txt"
+python -m sphinx.cmd.build -qnNW docs docs/_build/html
+python -m pytest
+python -m sphinx.cmd.build -qnNW -b doctest docs docs/_build/doctest

@@ -28,15 +28,14 @@ from __future__ import absolute_import
 
 import gzip
 import sys
-
 from collections import Mapping
-from flask import current_app, request, Blueprint, render_template, url_for, \
-    Response, make_response, has_request_context
-from flask.signals import Namespace
 from functools import wraps
 from itertools import islice
-from werkzeug.utils import import_string
 
+from flask import (Blueprint, Response, current_app, has_request_context,
+                   make_response, render_template, request, url_for)
+from flask.signals import Namespace
+from werkzeug.utils import import_string
 
 from . import config
 from .version import __version__
