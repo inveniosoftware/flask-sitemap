@@ -20,3 +20,4 @@ recursive-include docs/_templates *.html
 recursive-include docs/_themes *.py *.css *.css_t *.conf *.html README
 recursive-include flask_sitemap *.xml
 recursive-include tests *.xml
+recursive-include .github/workflows *.yml

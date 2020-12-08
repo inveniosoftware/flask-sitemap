@@ -12,17 +12,18 @@ from __future__ import absolute_import
 import os
 import shutil
 import sys
-
 from contextlib import contextmanager
 from datetime import datetime
 from tempfile import mkdtemp
 
 from click.testing import CliRunner
-from flask import request_started, request, url_for
+from flask import request, request_started, url_for
 from flask.cli import ScriptInfo
 from flask_script import Manager
-from flask_sitemap import Sitemap, config as default_config, \
-    script, sitemap_page_needed
+
+from flask_sitemap import Sitemap
+from flask_sitemap import config as default_config
+from flask_sitemap import script, sitemap_page_needed
 
 from .helpers import FlaskTestCase
 
@@ -33,8 +34,10 @@ class TestSitemap(FlaskTestCase):
 
     def test_version(self):
         # Assert that version number can be parsed.
-        from flask_sitemap import __version__
         from distutils.version import LooseVersion
+
+        from flask_sitemap import __version__
+        
         LooseVersion(__version__)
 
     def test_creation(self):

@@ -24,24 +24,20 @@ with open(os.path.join('flask_sitemap', 'version.py'), 'rt') as f:
         f.read()
     ).group('version')
 
-extras_require = {
-    'docs': ['sphinx'],
-    'cli': ['Flask-Script'],
-}
-
 tests_require = [
-    'pytest-cache>=1.0',
-    'pytest-cov>=2.2.0',
-    'pytest-pep8>=1.0.6',
-    'pytest>=2.8.5',
-    'coverage',
+    'pytest-invenio>=1.4.0',
+    'pytest-cache>=1.0'
 ]
 
-# Extend dependencies with extra packages
-for key, extra in extras_require.items():
-    if key != 'docs':
-        tests_require += extra
-        extras_require['docs'] += extra
+extras_require = {
+    'docs': ['Sphinx>=3'],
+    'cli': ['Flask-Script'],
+    'tests': tests_require,
+}
+
+extras_require['all'] = []
+for reqs in extras_require.values():
+    extras_require['all'].extend(reqs)
 
 setup(
     name='Flask-Sitemap',

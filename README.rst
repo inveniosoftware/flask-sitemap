@@ -2,8 +2,8 @@
  Flask-Sitemap
 ===============
 
-.. image:: https://img.shields.io/travis/inveniosoftware/flask-sitemap.svg
-        :target: https://travis-ci.org/inveniosoftware/flask-sitemap
+.. image:: https://github.com/inveniosoftware/flask-sitemap/workflows/CI/badge.svg
+        :target: https://github.com/inveniosoftware/flask-sitemap/actions
 
 .. image:: https://img.shields.io/coveralls/inveniosoftware/flask-sitemap.svg
         :target: https://coveralls.io/r/inveniosoftware/flask-sitemap

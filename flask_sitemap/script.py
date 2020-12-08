@@ -14,8 +14,8 @@
    Use :func:`flask_sitemap.cli:sitemap` instead.
 """
 
-import os
 import codecs
+import os
 import warnings
 
 from flask import current_app, url_for
