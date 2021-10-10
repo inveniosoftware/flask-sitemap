@@ -28,7 +28,12 @@ from __future__ import absolute_import
 
 import gzip
 import sys
-from collections import Mapping
+try:
+    # Python 3.3+
+    from collections.abc import Mapping
+except ImportError:
+    # Python 2
+    from collections import Mapping
 from functools import wraps
 from itertools import islice
 
