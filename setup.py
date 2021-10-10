@@ -31,7 +31,7 @@ tests_require = [
 
 extras_require = {
     'docs': ['Sphinx>=3'],
-    'cli': ['Flask-Script'],
+    'cli': ['Flask-Script>=2.0.6'],
     'tests': tests_require,
 }
 
@@ -54,8 +54,8 @@ setup(
     platforms='any',
     setup_requires=pytest_runner,
     install_requires=[
-        'Flask',
-        'blinker',
+        'Flask>=0.11',
+        'blinker>=1.3',
     ],
     extras_require=extras_require,
     tests_require=tests_require,
