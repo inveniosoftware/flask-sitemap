@@ -4,6 +4,15 @@ Changelog
 Here you can see the full list of changes between each Flask-Sitemap
 release.
 
+Version 0.3.1 (released 2022-02-04)
+-----------------------------------
+
+Notes
+~~~~~
+
+- Adds support for python 3.10
+- Moves flask-sitemap from Travis CI to Github Actions
+
 Version 0.3.0 (released 2018-05-02)
 -----------------------------------
 
