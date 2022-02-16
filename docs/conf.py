@@ -7,12 +7,9 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-import sys
+"""Sphinx configuration."""
+
 import os
-import re
-
-sys.path.append(os.path.abspath('_themes'))
-
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -52,11 +49,12 @@ copyright = u'2014, CERN'
 # The short X.Y version.
 
 # Get the version string.  Cannot be done with import!
-with open(os.path.join('..', 'flask_sitemap', 'version.py'), 'rt') as f:
-    version = re.search(
-        '__version__\s*=\s*"(?P<version>.*)"\n',
-        f.read()
-    ).group('version')
+g = {}
+with open(os.path.join(os.path.dirname(__file__), '..',
+                       'flask_sitemap', 'version.py'),
+          'rt') as fp:
+    exec(fp.read(), g)
+    version = g['__version__']
 
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -103,17 +101,24 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme_path = ['_themes']
-html_theme = 'flask_small'
+# html_theme_path = ['_themes']
+html_theme = 'alabaster'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'index_logo': False,
-    'index_logo_height': '40px;',
-    'github_fork': 'inveniosoftware/flask-sitemap',
+    'description': 'Sitemap XML.',
+    'github_user': 'inveniosoftware',
+    'github_repo': 'flask-sitemap',
+    'github_button': False,
+    'github_banner': True,
+    'show_powered_by': False,
+    'extra_nav_links': {
+        'flask-sitemap@GitHub': 'https://github.com/inveniosoftware/flask-sitemap',
+        'flask-sitemap@PyPI': 'https://pypi.python.org/pypi/flask-sitemap/',
+    }
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -150,7 +155,13 @@ html_theme_options = {
 
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
-    'index': ['sidebarintro.html', 'sourcelink.html', 'searchbox.html'],
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
 }
 
 # Additional templates that should be rendered to pages, maps page names to
