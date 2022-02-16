@@ -17,13 +17,11 @@ from datetime import datetime
 from tempfile import mkdtemp
 
 from click.testing import CliRunner
-from flask import request, request_started, url_for
 from flask.cli import ScriptInfo
-from flask_script import Manager
 
 from flask_sitemap import Sitemap
 from flask_sitemap import config as default_config
-from flask_sitemap import script, sitemap_page_needed
+from flask_sitemap import sitemap_page_needed
 
 from .helpers import FlaskTestCase
 
@@ -37,7 +35,7 @@ class TestSitemap(FlaskTestCase):
         from distutils.version import LooseVersion
 
         from flask_sitemap import __version__
-        
+
         LooseVersion(__version__)
 
     def test_creation(self):
@@ -237,28 +235,6 @@ class TestSitemap(FlaskTestCase):
             assert 'sitemap1.xml\nsitemap2.xml\nsitemap3.xml\nsitemap.xml' \
                 in result.output
             # assert result.exit_code == 0
-
-            with self.app.test_client() as c:
-                data = c.get('/sitemap.xml').data
-                data1 = c.get('/sitemap1.xml').data
-
-                assert b'sitemapindex' in data
-                assert len(data1) > 0
-
-                with open(os.path.join(directory, 'sitemap.xml'), 'rb') as f:
-                    assert f.read() == data
-
-                with open(os.path.join(directory, 'sitemap1.xml'), 'rb') as f:
-                    assert f.read() == data1
-        finally:
-            shutil.rmtree(directory)
-
-        directory = mkdtemp()
-        manager = Manager(self.app)
-        manager.add_command('sitemap', script.Sitemap())
-
-        try:
-            manager.handle('manage.py', ['sitemap', '-o', directory])
 
             with self.app.test_client() as c:
                 data = c.get('/sitemap.xml').data

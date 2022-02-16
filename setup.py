@@ -14,9 +14,6 @@ import sys
 
 from setuptools import setup
 
-needs_pytest = set(['pytest', 'test', 'ptr']).intersection(sys.argv)
-pytest_runner = ['pytest-runner'] if needs_pytest else []
-
 # Get the version string. Cannot be done with import!
 with open(os.path.join('flask_sitemap', 'version.py'), 'rt') as f:
     version = re.search(
@@ -25,13 +22,18 @@ with open(os.path.join('flask_sitemap', 'version.py'), 'rt') as f:
     ).group('version')
 
 tests_require = [
-    'pytest-invenio>=1.4.0',
-    'pytest-cache>=1.0'
+    'check-manifest>=0.42',
+    'coverage>=5.3,<6',
+    'pytest-cov>=2.10.1',
+    'pytest-flask>=1.0.0',
+    'pytest-isort>=1.2.0',
+    'pytest-pycodestyle>=2.2.0',
+    'pytest-pydocstyle>=2.2.0',
+    'pytest>=6,<7',
 ]
 
 extras_require = {
-    'docs': ['Sphinx>=3'],
-    'cli': ['Flask-Script>=2.0.6'],
+    'docs': ['Sphinx==4.2.0'],
     'tests': tests_require,
 }
 
@@ -52,9 +54,8 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
-    setup_requires=pytest_runner,
     install_requires=[
-        'Flask>=0.11',
+        'Flask>=1.1',
         'blinker>=1.3',
     ],
     extras_require=extras_require,
@@ -68,11 +69,7 @@ setup(
         'Framework :: Flask',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',

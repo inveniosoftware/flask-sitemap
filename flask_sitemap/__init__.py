@@ -24,38 +24,19 @@ or alternatively using the factory pattern:
 >>> ext.init_app(app)
 """
 
-from __future__ import absolute_import
-
 import gzip
-import sys
-try:
-    # Python 3.3+
-    from collections.abc import Mapping
-except ImportError:
-    # Python 2
-    from collections import Mapping
+from collections.abc import Mapping
 from functools import wraps
-from itertools import islice
+from io import BytesIO
+from itertools import islice, zip_longest
 
 from flask import (Blueprint, Response, current_app, has_request_context,
-                   make_response, render_template, request, url_for)
+                   make_response, render_template, url_for)
 from flask.signals import Namespace
 from werkzeug.utils import import_string
 
 from . import config
 from .version import __version__
-
-# PY2/3 compatibility
-if sys.version_info[0] == 3:  # pragma: no cover
-    import io
-    BytesIO = io.BytesIO
-    string_types = str,
-    from itertools import zip_longest
-else:
-    from cStringIO import StringIO as BytesIO
-    string_types = basestring,
-    from itertools import izip_longest as zip_longest
-
 
 # Signals
 _signals = Namespace()
@@ -102,7 +83,7 @@ class Sitemap(object):
 
         # Set decorators from configuration
         for decorator in app.config.get('SITEMAP_VIEW_DECORATORS'):
-            if isinstance(decorator, string_types):
+            if isinstance(decorator, str):
                 decorator = import_string(decorator)
             self.decorators.append(decorator)
 
@@ -222,7 +203,7 @@ class Sitemap(object):
             for generator in self.url_generators:
                 for generated in generator():
                     result = {}
-                    if isinstance(generated, string_types):
+                    if isinstance(generated, str):
                         result['loc'] = generated
                     else:
                         if isinstance(generated, Mapping):

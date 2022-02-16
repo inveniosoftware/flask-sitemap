@@ -13,8 +13,6 @@
    Integration with Flask 0.11+ using Click library.
 """
 
-from __future__ import absolute_import
-
 import codecs
 import os
 import warnings
