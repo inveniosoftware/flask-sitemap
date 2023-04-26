@@ -131,7 +131,7 @@ application object, page number and url generator.
 Caching
 -------
 
-Large sites should implement caching or their sitemaps. The following
+Large sites should implement caching for their sitemaps. The following
 example shows an basic in-memory cache that can be replaced by
 *Flask-Cache*.
 
