@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
-# -*- coding: utf-8 -*-
-#
-# This file is part of Invenio.
-# Copyright (C) 2013-2020 CERN.
-#
-# Flask-Sitemap is free software; you can redistribute it and/or modify
-# it under the terms of the Revised BSD License; see LICENSE file for
-# more details.
+# SPDX-FileCopyrightText: 2013-2020 CERN.
+# SPDX-License-Identifier: BSD-3-Clause
 
 # Quit on errors
 set -o errexit
