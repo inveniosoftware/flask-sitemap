@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2014, 2015, 2016 CERN.
 # SPDX-License-Identifier: BSD-3-Clause
 
+exclude .git-blame-ignore-revs
 include *.rst
 include *.sh
 include .coveragerc
